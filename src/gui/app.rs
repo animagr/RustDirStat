@@ -476,6 +476,11 @@ impl RustDirStatApp {
                     }
 
                     response.context_menu(|ui| {
+                        if ui.button("Open in Explorer").clicked() {
+                            context_actions.push((item.node, "explorer"));
+                            ui.close_menu();
+                        }
+                        ui.separator();
                         if item.is_dir {
                             if ui.button("Rescan Folder").clicked() {
                                 context_actions.push((item.node, "rescan"));
@@ -521,6 +526,15 @@ impl RustDirStatApp {
                     }
                     "rescan" => {
                         self.start_partial_rescan(path, node);
+                    }
+                    "explorer" => {
+                        #[cfg(target_os = "windows")]
+                        {
+                            let _ = std::process::Command::new("explorer.exe")
+                                .arg("/select,")
+                                .arg(&path)
+                                .spawn();
+                        }
                     }
                     _ => {}
                 }
