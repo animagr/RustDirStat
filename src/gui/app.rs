@@ -18,6 +18,7 @@ enum PendingAction {
 
 const TREEMAP_UPDATE_INTERVAL: Duration = Duration::from_millis(100);
 const LEFT_PANEL_WIDTH: f32 = 300.0;
+const LEFT_PANEL_MAX_WIDTH: f32 = 500.0;
 const RIGHT_PANEL_WIDTH: f32 = 200.0;
 
 #[derive(Debug, Default)]
@@ -454,7 +455,7 @@ impl RustDirStatApp {
         let mut toggle_expand = Vec::new();
         let mut context_actions: Vec<(TreeIndex, &str)> = Vec::new();
 
-        egui::ScrollArea::vertical().show(ui, |ui| {
+        egui::ScrollArea::both().show(ui, |ui| {
             for item in &tree_data {
                 ui.horizontal(|ui| {
                     ui.add_space(item.depth as f32 * 16.0);
@@ -1048,6 +1049,7 @@ impl eframe::App for RustDirStatApp {
 
         egui::SidePanel::left("tree_panel")
             .default_width(LEFT_PANEL_WIDTH)
+            .max_width(LEFT_PANEL_MAX_WIDTH)
             .show(ctx, |ui| {
                 ui.heading("Files");
                 ui.separator();
